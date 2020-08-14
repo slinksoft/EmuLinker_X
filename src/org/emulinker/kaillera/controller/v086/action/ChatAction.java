@@ -1,5 +1,8 @@
 package org.emulinker.kaillera.controller.v086.action;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -403,6 +406,47 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 					}
 		
 				}
+				
+				 if (((Chat) message).getMessage().equals("/rules")) {
+			            File file = new File("conf/rules.txt");
+			            StringBuffer stringBuffer = new StringBuffer();
+			            BufferedReader bufferedReader = null;
+			            try {
+			                bufferedReader = new BufferedReader(new FileReader(file));
+			                String string6 = null;
+			                while ((string6 = bufferedReader.readLine()) != null) {
+			                    stringBuffer.append(string6).append(System.getProperty("line.separator"));
+			                }
+			            }
+			            catch (Exception var8_69) {
+			                // empty catch block
+			            }
+			            try {
+			                clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "********Server Rules********"));
+			            }
+			            catch (Exception var8_70) {
+			                // empty catch block
+			            }
+			            try {
+			                Thread.sleep(20);
+			            }
+			            catch (Exception var8_71) {
+			                // empty catch block
+			            }
+			            try {
+			                clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", stringBuffer.toString()));
+			            }
+			            catch (Exception var8_72) {
+			                // empty catch block
+			            }
+			            try {
+			                Thread.sleep(20);
+			                return;
+			            }
+			            catch (Exception var8_73) {
+			                return;
+			            }
+			        }
 				else if(((Chat) message).getMessage().equals("/help")){	
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/me <message> to make personal message eg. /me is bored ...Slink is bored.")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
@@ -411,6 +455,8 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/msg <UserID> <msg> to PM somebody. /msgoff or /msgon to turn pm off | on.")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/myip to get your IP Address.")); } catch(Exception e) {}
+					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/rules for the server's rule list.")); } catch(Exception e) {}
+					 try { Thread.sleep(20); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}		
 					if(clientHandler.getUser().getAccess() == AccessManager.ACCESS_MODERATOR){
 						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/silence <UserID> <min> to silence a user. 15min max.")); } catch(Exception e) {}
