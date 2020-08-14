@@ -76,7 +76,7 @@ public class KailleraMasterUpdateTask implements MasterListUpdateTask
 		params[2] = new NameValuePair("nbusers", Integer.toString(kailleraServer.getNumUsers()));
 		params[3] = new NameValuePair("maxconn", Integer.toString(kailleraServer.getMaxUsers()));
 		
-		params[4] = new NameValuePair("version", "ESF" + releaseInfo.getVersionString());
+		params[4] = new NameValuePair("version", "EMX" + releaseInfo.getVersionString());
 		params[5] = new NameValuePair("nbgames", Integer.toString(kailleraServer.getNumGames()));
 		params[6] = new NameValuePair("location", publicInfo.getLocation());
 		params[7] = new NameValuePair("ip", publicInfo.getConnectAddress());
