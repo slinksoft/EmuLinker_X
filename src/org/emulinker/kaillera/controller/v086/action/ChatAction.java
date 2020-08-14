@@ -407,7 +407,7 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 		
 				}
 				
-				 if (((Chat) message).getMessage().equals("/rules")) {
+				else if (((Chat) message).getMessage().equals("/rules")) {
 			            File file = new File("conf/rules.txt");
 			            StringBuffer stringBuffer = new StringBuffer();
 			            BufferedReader bufferedReader = null;
@@ -456,7 +456,9 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 					try { Thread.sleep(20); } catch(Exception e) {}
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/myip to get your IP Address.")); } catch(Exception e) {}
 					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/rules for the server's rule list.")); } catch(Exception e) {}
-					 try { Thread.sleep(20); } catch(Exception e) {}
+					try { Thread.sleep(20); } catch(Exception e) {}
+					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/alivecheck check to see if the server is still responsive with your client")); } catch(Exception e) {}
+					try { Thread.sleep(20); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}		
 					if(clientHandler.getUser().getAccess() == AccessManager.ACCESS_MODERATOR){
 						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/silence <UserID> <min> to silence a user. 15min max.")); } catch(Exception e) {}
