@@ -11,4 +11,7 @@ Credits:
 
 
 https://github.com/God-Weapon/EmuLinkerSF
+
 https://github.com/kwilson21/Emulinker-X
+
+https://github.com/monospacesoftware/emulinker
