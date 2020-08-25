@@ -1,5 +1,5 @@
 # emulinkerx3
-An unofficial update to Emulinker X, merging EmulinkerSF updates with  the Emulinker X project
+An unofficial update to Emulinker X, merging EmulinkerSF updates with  the Emulinker X project, with additional optimization, roles, and bug fixes.
 
 Credits:
 
