@@ -489,7 +489,8 @@ public final class KailleraGameImpl implements KailleraGame
 			announce("************************", user);
 			announce("Type /p2pon to ignore ALL server activity during gameplay.", user);
 			announce("This will reduce lag that you contribute due to a busy server.", user);
-			announce("If server is greater than 60 users, option is auto set.", user);
+			announce("If server is greater than 60 users, option is auto set.\n", user);
+			announce("By: Slink, OGenDroX, Firo, and Agent 21 iXi ", user);
 			announce("************************", user);
 			/*
 			if(autoFireDetector != null)

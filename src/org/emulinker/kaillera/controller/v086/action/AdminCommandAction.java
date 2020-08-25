@@ -538,7 +538,7 @@ public class AdminCommandAction implements V086Action
 				throw new ActionException("User is already elevated."); //$NON-NLS-1$
 
 			server.getAccessManager().addTempElevated(user.getConnectSocketAddress().getAddress().getHostAddress(), minutes);
-			server.announce("Temp Elevated Granted: " + user.getName() + " for " + minutes + "min", false, null); //$NON-NLS-1$ //$NON-NLS-2$
+			server.announce(EmuLang.getString("AdminCommandAction.TempElevatedGranted", minutes, user.getName()), false, null); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (NoSuchElementException e)
 		{
@@ -575,7 +575,7 @@ public class AdminCommandAction implements V086Action
 				throw new ActionException("User is already moderator."); //$NON-NLS-1$
 
 			server.getAccessManager().addTempModerator(user.getConnectSocketAddress().getAddress().getHostAddress(), minutes);
-			server.announce("Temp Moderator Granted: " + user.getName() + " for " + minutes + "min.", false, null); //$NON-NLS-1$ //$NON-NLS-2$
+			server.announce(EmuLang.getString("AdminCommandAction.TempModeratorGranted", minutes, user.getName()), false, null); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (NoSuchElementException e)
 		{
