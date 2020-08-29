@@ -1,5 +1,8 @@
 package org.emulinker.kaillera.controller.v086.action;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.net.InetAddress;
 import java.util.*;
 
@@ -30,7 +33,7 @@ public class AdminCommandAction implements V086Action
 	public static final String			COMMAND_TEMPADMIN		= "/tempadmin"; //$NON-NLS-1$
 	public static final String			COMMAND_VERSION			= "/version"; //$NON-NLS-1$
 	public static final String			COMMAND_TRIVIA			= "/trivia";
-	
+	public static final String			COMMAND_PRULES			="/publicrules";
 	//SF MOD
 	public static final String			COMMAND_STEALTH			= "/stealth"; //$NON-NLS-1$
 	public static final String			COMMAND_TEMPELEVATED	= "/tempelevated"; //$NON-NLS-1$
@@ -128,6 +131,10 @@ public class AdminCommandAction implements V086Action
 		{
 			return true;
 		}
+		else if (chat.startsWith(COMMAND_PRULES))
+		{
+			return true;
+		}
 		return false;
 	}
 	
@@ -219,6 +226,10 @@ public class AdminCommandAction implements V086Action
 			{
 				processTrivia(chat, server, user, clientHandler);
 			}
+			else if (chat.startsWith(COMMAND_PRULES))
+			{
+				processPRules(chat, server, user, clientHandler);
+			}
 			else
 				throw new ActionException("Invalid Command: " + chat); //$NON-NLS-1$
 		}
@@ -289,6 +300,8 @@ public class AdminCommandAction implements V086Action
 			try { Thread.sleep(20); } catch(Exception e) {}
 			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/clear <IP Address> to remove any temp ban, silence, elevated, moderator or admin.")); //$NON-NLS-1$ //$NON-NLS-2$
 			try { Thread.sleep(20); } catch(Exception e) {}
+			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/publicrules to display rules to everyone in main chat and game chat")); //$NON-NLS-1$ //$NON-NLS-2$
+			try { Thread.sleep(20); } catch(Exception e) {}
 		}
 	}
 	
@@ -303,31 +316,60 @@ public class AdminCommandAction implements V086Action
 		String str = (message.substring(space + 1));
 		//WildcardStringPattern pattern = new WildcardStringPattern
 		
-		for (KailleraUserImpl user : server.getUsers())
+		if (str.equals("*"))
 		{
-			if (!user.isLoggedIn())
-				continue;
-
-			if (user.getName().toLowerCase().contains(str.toLowerCase()))
+			for (KailleraUserImpl user : clientHandler.getUser().getUsers())
 			{
-				StringBuilder sb = new StringBuilder();
-				sb.append("UserID: "); //$NON-NLS-1$
-				sb.append(user.getID());
-				sb.append(", IP: "); //$NON-NLS-1$
-				sb.append(user.getConnectSocketAddress().getAddress().getHostAddress());
-				sb.append(", Nick: <"); //$NON-NLS-1$
-				sb.append(user.getName());
-				sb.append(">, Access: "); //$NON-NLS-1$
-				sb.append(user.getAccessStr());
-				if(user.getGame() != null){
-					sb.append(", GameID: "); //$NON-NLS-1$
-					sb.append(user.getGame().getID());
-					sb.append(", Game: "); //$NON-NLS-1$
-					sb.append(user.getGame().getRomName());
-				}
+				if (!user.isLoggedIn())
+					continue;
+
+					StringBuilder sb = new StringBuilder();
+					sb.append("UserID: "); //$NON-NLS-1$
+					sb.append(user.getID());
+					sb.append(", Nick: <"); //$NON-NLS-1$
+					sb.append(user.getName());
+					sb.append(">"); //$NON-NLS-1$
+					sb.append(", Access: ");
+					sb.append(user.getAccessStr());
+					
+					if(user.getGame() != null){
+						sb.append(", GameID: "); //$NON-NLS-1$
+						sb.append(user.getGame().getID());
+						sb.append(", Game: "); //$NON-NLS-1$
+						sb.append(user.getGame().getRomName());
+					}
+					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); } catch(Exception e) {}
+					foundCount++;
 				
-				clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); //$NON-NLS-1$
-				foundCount++;
+			}
+		}
+		else
+		{
+			for (KailleraUserImpl user : clientHandler.getUser().getUsers())
+			{
+				if (!user.isLoggedIn())
+					continue;
+
+				if (user.getName().toLowerCase().contains(str.toLowerCase()))
+				{
+					StringBuilder sb = new StringBuilder();
+					sb.append("UserID: "); //$NON-NLS-1$
+					sb.append(user.getID());
+					sb.append(", Nick: <"); //$NON-NLS-1$
+					sb.append(user.getName());
+					sb.append(">"); //$NON-NLS-1$
+					sb.append(", Access: ");
+					sb.append(user.getAccessStr());
+					
+					if(user.getGame() != null){
+						sb.append(", GameID: "); //$NON-NLS-1$
+						sb.append(user.getGame().getID());
+						sb.append(", Game: "); //$NON-NLS-1$
+						sb.append(user.getGame().getRomName());
+					}
+					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); } catch(Exception e) {}
+					foundCount++;
+				}
 			}
 		}
 
@@ -879,6 +921,36 @@ public class AdminCommandAction implements V086Action
 		{
 			throw new ActionException(EmuLang.getString("AdminCommandAction.VersionError")); //$NON-NLS-1$
 		}
+	}
+	
+	private void processPRules(String message, KailleraServerImpl server, KailleraUserImpl admin, V086Controller.V086ClientHandler clientHandler) throws ActionException, MessageFormatException
+	{
+		if(!(admin.getAccess() >= AccessManager.ACCESS_SUPERADMIN)){
+			throw new ActionException("Only SUPER ADMIN's can give Temp Admin Status!"); //$NON-NLS-1$
+		}
+		
+		 File file = new File("conf/rules.txt");
+         StringBuffer stringBuffer = new StringBuffer();
+         BufferedReader bufferedReader = null;
+         try {
+             bufferedReader = new BufferedReader(new FileReader(file));
+             String string6 = null;
+             while ((string6 = bufferedReader.readLine()) != null) {
+                 stringBuffer.append(string6).append(System.getProperty("line.separator"));
+             }
+         }
+         catch (Exception var8_69) {
+             // empty catch block
+         }
+
+ 		String header = "********Server Rules********";
+ 		
+ 		server.announce(header, true, null);
+ 		
+ 		String rules = stringBuffer.toString();
+ 		
+ 		server.announce(rules, true, null);
+ 	
 	}
 	
 	private void sleep(int ms)

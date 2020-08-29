@@ -469,7 +469,7 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 					if(clientHandler.getUser().getAccess() < AccessManager.ACCESS_ADMIN){
 						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/version to get server version.")); } catch(Exception e) {}
 						try { Thread.sleep(20); } catch(Exception e) {}	
-						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
+						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
 						try { Thread.sleep(20); } catch(Exception e) {}
 						return;
 					}
@@ -477,41 +477,77 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 				else if(((Chat) message).getMessage().startsWith("/finduser") && clientHandler.getUser().getAccess() < AccessManager.ACCESS_ADMIN){
 					int space = ((Chat) message).getMessage().indexOf(' ');
 					if (space < 0){
-						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "Finduser Error: /finduser <nick> eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
+						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "Finduser Error: /finduser <nick> or /finduser * for all users eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
 						return;
 					}
 					int foundCount = 0;
 					String str =(((Chat) message).getMessage().substring(space + 1));
 					//WildcardStringPattern pattern = new WildcardStringPattern
-					for (KailleraUserImpl user : clientHandler.getUser().getUsers())
+					
+					if (str.equals("*"))
 					{
-						if (!user.isLoggedIn())
-							continue;
-		
-						if (user.getName().toLowerCase().contains(str.toLowerCase()))
+						for (KailleraUserImpl user : clientHandler.getUser().getUsers())
 						{
-							StringBuilder sb = new StringBuilder();
-							sb.append("UserID: "); //$NON-NLS-1$
-							sb.append(user.getID());
-							sb.append(", Nick: <"); //$NON-NLS-1$
-							sb.append(user.getName());
-							sb.append(">"); //$NON-NLS-1$
-							sb.append(", Access: ");
-							if(user.getAccessStr().equals("SuperAdmin") || user.getAccessStr().equals("Admin")){
-								sb.append("Normal");
-							}
-							else{
-								sb.append(user.getAccessStr());
-							}
+							if (!user.isLoggedIn())
+								continue;
+	
+								StringBuilder sb = new StringBuilder();
+								sb.append("UserID: "); //$NON-NLS-1$
+								sb.append(user.getID());
+								sb.append(", Nick: <"); //$NON-NLS-1$
+								sb.append(user.getName());
+								sb.append(">"); //$NON-NLS-1$
+								sb.append(", Access: ");
+								if(user.getAccessStr().equals("Super Admin") || user.getAccessStr().equals("Admin")){
+									sb.append("Normal");
+								}
+								else{
+									sb.append(user.getAccessStr());
+								}
+								
+								if(user.getGame() != null){
+									sb.append(", GameID: "); //$NON-NLS-1$
+									sb.append(user.getGame().getID());
+									sb.append(", Game: "); //$NON-NLS-1$
+									sb.append(user.getGame().getRomName());
+								}
+								try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); } catch(Exception e) {}
+								foundCount++;
 							
-							if(user.getGame() != null){
-								sb.append(", GameID: "); //$NON-NLS-1$
-								sb.append(user.getGame().getID());
-								sb.append(", Game: "); //$NON-NLS-1$
-								sb.append(user.getGame().getRomName());
+						}
+					}
+					else
+					{
+						for (KailleraUserImpl user : clientHandler.getUser().getUsers())
+						{
+							if (!user.isLoggedIn())
+								continue;
+			
+							if (user.getName().toLowerCase().contains(str.toLowerCase()))
+							{
+								StringBuilder sb = new StringBuilder();
+								sb.append("UserID: "); //$NON-NLS-1$
+								sb.append(user.getID());
+								sb.append(", Nick: <"); //$NON-NLS-1$
+								sb.append(user.getName());
+								sb.append(">"); //$NON-NLS-1$
+								sb.append(", Access: ");
+								if(user.getAccessStr().equals("SuperAdmin") || user.getAccessStr().equals("Admin")){
+									sb.append("Normal");
+								}
+								else{
+									sb.append(user.getAccessStr());
+								}
+								
+								if(user.getGame() != null){
+									sb.append(", GameID: "); //$NON-NLS-1$
+									sb.append(user.getGame().getID());
+									sb.append(", Game: "); //$NON-NLS-1$
+									sb.append(user.getGame().getRomName());
+								}
+								try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); } catch(Exception e) {}
+								foundCount++;
 							}
-							try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); } catch(Exception e) {}
-							foundCount++;
 						}
 					}
 		
