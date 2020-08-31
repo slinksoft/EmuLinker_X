@@ -61,8 +61,11 @@ public class KailleraServerImpl implements KailleraServer, Executable
 	protected Map<Integer, KailleraGameImpl>	games;
 
 	private Trivia trivia = null;
+	private Unscramble unscramble = null;
 	private Thread triviaThread;
+	private Thread unscrambleThread;
 	private boolean switchTrivia = false;
+	private boolean switchUnscramble = false;
 	
 	public KailleraServerImpl(ThreadPoolExecutor threadPool, AccessManager accessManager, Configuration config, StatsCollector statsCollector, ReleaseInfo releaseInfo, AutoFireDetectorFactory autoFireDetectorFactory) throws NoSuchElementException, ConfigurationException
 	{
@@ -166,6 +169,25 @@ public class KailleraServerImpl implements KailleraServer, Executable
 	}
 	public boolean getSwitchTrivia(){
 		return switchTrivia;
+	}
+	
+	public void setUnscramble(Unscramble unscramble){
+		this.unscramble = unscramble;
+	}
+	public void setUnscrambleThread(Thread unscrambleThread){
+		this.unscrambleThread = unscrambleThread;
+	}
+	public void setSwitchUnscramble(boolean switchUnscramble){
+		this.switchUnscramble = switchUnscramble;
+	}
+	public Unscramble getUnscramble(){
+		return unscramble;
+	}
+	public Thread getUnscrambleThread(){
+		return unscrambleThread;
+	}
+	public boolean getSwitchUnscramble(){
+		return switchUnscramble;
 	}
 	
 	public AccessManager getAccessManager()
@@ -712,6 +734,14 @@ public class KailleraServerImpl implements KailleraServer, Executable
 				trivia.addScore(user.getName(), user.getSocketAddress().getAddress().getHostAddress(), message);
 			}
 		}
+		
+		if(switchUnscramble){
+			if(!unscramble.isAnswered() && unscramble.isCorrect(message)){
+				unscramble.addScore(user.getName(), user.getSocketAddress().getAddress().getHostAddress(), message);
+			}
+		}
+			
+			
 	}
 
 	public synchronized KailleraGame createGame(KailleraUser user, String romName) throws CreateGameException, FloodException

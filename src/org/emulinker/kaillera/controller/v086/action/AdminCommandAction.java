@@ -33,6 +33,7 @@ public class AdminCommandAction implements V086Action
 	public static final String			COMMAND_TEMPADMIN		= "/tempadmin"; //$NON-NLS-1$
 	public static final String			COMMAND_VERSION			= "/version"; //$NON-NLS-1$
 	public static final String			COMMAND_TRIVIA			= "/trivia";
+	public static final String			COMMAND_UNSCRAMBLE		="/unscramble";
 	public static final String			COMMAND_PRULES			="/publicrules";
 	//SF MOD
 	public static final String			COMMAND_STEALTH			= "/stealth"; //$NON-NLS-1$
@@ -131,6 +132,10 @@ public class AdminCommandAction implements V086Action
 		{
 			return true;
 		}
+		else if (chat.startsWith(COMMAND_UNSCRAMBLE))
+		{
+			return true;
+		}
 		else if (chat.startsWith(COMMAND_PRULES))
 		{
 			return true;
@@ -226,6 +231,10 @@ public class AdminCommandAction implements V086Action
 			{
 				processTrivia(chat, server, user, clientHandler);
 			}
+			else if (chat.startsWith(COMMAND_UNSCRAMBLE))
+			{
+				processUnscramble(chat, server, user, clientHandler);
+			}
 			else if (chat.startsWith(COMMAND_PRULES))
 			{
 				processPRules(chat, server, user, clientHandler);
@@ -256,8 +265,6 @@ public class AdminCommandAction implements V086Action
 	{
 		if(admin.getAccess() == AccessManager.ACCESS_MODERATOR)
 			return;
-		//clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.AdminCommands"))); //$NON-NLS-1$ //$NON-NLS-2$
-		//try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpVersion"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpKick"))); //$NON-NLS-1$ //$NON-NLS-2$
@@ -280,13 +287,17 @@ public class AdminCommandAction implements V086Action
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpAnnounceGame"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpFindUser"))); //$NON-NLS-1$ //$NON-NLS-2$
+		try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpFindGame"))); //$NON-NLS-1$ //$NON-NLS-2$
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/findgame <Name> to get game info. or /findgame * to get all game info.")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaon to start the trivia bot- /triviapause to pause the bot- /triviaresume to resume the bot after pause- /triviasave to save the bot's scores- /triviatime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaoff to stop the bot- /triviascores to show top 3 scores- /triviawin to show a winner- /triviaupdate <IP Address> <New IP Address> to update ip address")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleon to start the unscramble bot- /unscramblepause to pause the bot- /unscrambleresume to resume the bot after pause- /unscramblesave to save the bot's scores- /unscrambletime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleoff to stop the bot- /unscramblescores to show top 3 scores- /unscramblewin to show a winner")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/stealthon /stealthoff to join a room invisibly.")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
@@ -314,7 +325,6 @@ public class AdminCommandAction implements V086Action
 
 		int foundCount = 0;
 		String str = (message.substring(space + 1));
-		//WildcardStringPattern pattern = new WildcardStringPattern
 		
 		if (str.equals("*"))
 		{
@@ -384,20 +394,39 @@ public class AdminCommandAction implements V086Action
 			throw new ActionException(EmuLang.getString("AdminCommandAction.FindGameError")); //$NON-NLS-1$
 
 		int foundCount = 0;
-		WildcardStringPattern pattern = new WildcardStringPattern(message.substring(space + 1));
-		for (KailleraGameImpl game : server.getGames())
+		String str = (message.substring(space + 1));
+		
+		if (str.equals("*"))
 		{
-			if (pattern.match(game.getRomName()))
+			for (KailleraGameImpl game : server.getGames())
 			{
-				StringBuilder sb = new StringBuilder();
-				sb.append("GameID: "); //$NON-NLS-1$
-				sb.append(game.getID());
-				sb.append(", Owner: <"); //$NON-NLS-1$
-				sb.append(game.getOwner().getName());
-				sb.append(">, Game: "); //$NON-NLS-1$
-				sb.append(game.getRomName());
-				clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); //$NON-NLS-1$
-				foundCount++;
+					StringBuilder sb = new StringBuilder();
+					sb.append("GameID: "); //$NON-NLS-1$
+					sb.append(game.getID());
+					sb.append(", Owner: <"); //$NON-NLS-1$
+					sb.append(game.getOwner().getName());
+					sb.append(">, Game: "); //$NON-NLS-1$
+					sb.append(game.getRomName());
+					clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); //$NON-NLS-1$
+					foundCount++;
+			}
+		}
+		else
+		{
+			for (KailleraGameImpl game : server.getGames())
+			{
+				if (game.getRomName().toLowerCase().contains(str.toLowerCase()))
+				{
+					StringBuilder sb = new StringBuilder();
+					sb.append("GameID: "); //$NON-NLS-1$
+					sb.append(game.getID());
+					sb.append(", Owner: <"); //$NON-NLS-1$
+					sb.append(game.getOwner().getName());
+					sb.append(">, Game: "); //$NON-NLS-1$
+					sb.append(game.getRomName());
+					clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", sb.toString())); //$NON-NLS-1$
+					foundCount++;
+				}
 			}
 		}
 
@@ -789,14 +818,114 @@ public class AdminCommandAction implements V086Action
 				scanner.next();
 				int questionTime = scanner.nextInt();	
 				server.getTrivia().setQuestionTime(questionTime * 1000);
-				server.announce("<Trivia> " + "SupraTrivia's question delay has been changed to " + questionTime + "s!", false, admin);
+				server.announce("<Trivia> " + "SupraSlinkTrivia's question delay has been changed to " + questionTime + "s!", false, admin);
 			}
 			catch(Exception e){
 				throw new ActionException("Invalid Trivia Time!"); //$NON-NLS-1$
 			}
 			
-		}
+		}  
+		else
+			throw new ActionException("Trivia Error: You must use the following commands: /triviareset, /triviaon, /triviaoff /triviapause, /triviasave, /triviascores, /triviawin & /triviatime");
+        
+		
 	}
+	
+	private void processUnscramble(String message, KailleraServerImpl server, KailleraUserImpl admin, V086Controller.V086ClientHandler clientHandler) throws ActionException, MessageFormatException
+        {	
+            if(message.equals("/unscramblereset"))
+            {
+                if(server.getSwitchUnscramble())
+                {
+                    server.getUnscramble().saveScores(true);
+                    server.getUnscrambleThread().stop();
+                }
+                server.announce("<Unscramble> EmuLinker X Unscramble has been reset!", false, null);
+                Unscramble unscramble = new Unscramble(server);
+                Thread unscrambleThread = new Thread(unscramble);
+                unscrambleThread.start();
+                server.setUnscrambleThread(unscrambleThread);
+                server.setUnscramble(unscramble);
+                server.setSwitchUnscramble(true);
+                unscramble.setTriviaPaused(false);
+            } 
+            else if(message.equals("/unscrambleon"))
+            {
+                if(server.getUnscramble() != null)
+                    throw new ActionException("Unscrambler already started!");
+                server.announce("EmuLinker X Unscramble has been started!",false, null);
+                Unscramble unscramble = new Unscramble(server);
+                Thread unscrambleThread = new Thread(unscramble);
+                unscrambleThread.start();
+                server.setUnscrambleThread(unscrambleThread);
+                server.setUnscramble(unscramble);
+                server.setSwitchUnscramble(true);
+                unscramble.setTriviaPaused(false);
+            }
+            
+            else if (message.equals("/unscrambleoff"))
+    		{
+    			if (server.getUnscramble() == null)
+    				throw new ActionException("Unscrambler needs to be started first!");  //$NON-NLS-1$
+    			server.announce("EmuLinker X Unscramble has been stopped!", false, null);
+    			server.getUnscramble().saveScores(false);
+    			server.getUnscrambleThread().stop();
+    			server.setSwitchUnscramble(false);
+    			server.setUnscramble(null);
+    		}
+            else if(message.equals("/unscramblepause"))
+            {
+                if(server.getUnscramble() == null)
+                    throw new ActionException("Unscrambler needs to be started first!");
+                server.getUnscramble().setTriviaPaused(true);
+                server.announce("<Unscramble> EmuLinker X Unscramble will be paused after this question!", false, null);
+            }
+            else if(message.equals("/unscrambleresume"))
+            {
+                if(server.getUnscramble() == null)
+                    throw new ActionException("Unscrambler needs to be started first!");
+                server.getUnscramble().setTriviaPaused(false);
+                server.announce("<Unscramble> EmuLinker X Unscramble has been resumed!", false, null);
+            } 
+            else if(message.equals("/unscramblesave"))
+            {
+                if(server.getUnscramble() == null)
+                    throw new ActionException("Unscrambler needs to be started first!");
+                server.getUnscramble().saveScores(true);
+            }
+            else if (message.equals("/unscramblescores"))
+    		{
+    			if(server.getUnscramble() == null){
+    				throw new ActionException("Unscrambler needs to be started first!"); //$NON-NLS-1$
+    			}
+    			server.getUnscramble().displayHighScores(false);
+    		}
+    		else if (message.equals("/unscramblewin"))
+    		{
+    			if(server.getUnscramble() == null){
+    				throw new ActionException("Unscrambler needs to be started first!"); //$NON-NLS-1$
+    			}
+    			server.getUnscramble().displayHighScores(true);
+    		}
+            else if(message.startsWith("/unscrambletime"))
+            {
+                if(server.getUnscramble() == null)
+                    throw new ActionException("Unscrambler needs to be started first!");
+                Scanner scanner = (new Scanner(message)).useDelimiter(" ");
+                try
+                {
+                    scanner.next();
+                    int questionTime = scanner.nextInt();
+                    server.getUnscramble().setQuestionTime(questionTime * 1000);
+                    server.announce((new StringBuilder()).append("<Unscramble> EmuLinker X Unscramble's question delay has been changed to ").append(questionTime).append("s!").toString(), false, admin);
+                }
+                catch(Exception e)
+                {
+                    throw new ActionException("Invalid Unscramble Time!");
+                }
+            } else
+    			throw new ActionException("Unscramble Error: You must use the following commands: /unscramblereset, /unscrambleon, /unscrambleoff /unscramblepause, /unscramblesave, /unscramblescores, /unscramblewin & /unscrambletime");
+        }
 	
 		
 	
@@ -926,7 +1055,7 @@ public class AdminCommandAction implements V086Action
 	private void processPRules(String message, KailleraServerImpl server, KailleraUserImpl admin, V086Controller.V086ClientHandler clientHandler) throws ActionException, MessageFormatException
 	{
 		if(!(admin.getAccess() >= AccessManager.ACCESS_SUPERADMIN)){
-			throw new ActionException("Only SUPER ADMIN's can give Temp Admin Status!"); //$NON-NLS-1$
+			throw new ActionException("Only SUPER ADMIN's can announce public rules!"); //$NON-NLS-1$
 		}
 		
 		 File file = new File("conf/rules.txt");
