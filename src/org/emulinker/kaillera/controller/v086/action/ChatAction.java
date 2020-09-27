@@ -532,7 +532,7 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 								sb.append(user.getName());
 								sb.append(">"); //$NON-NLS-1$
 								sb.append(", Access: ");
-								if(user.getAccessStr().equals("SuperAdmin") || user.getAccessStr().equals("Admin")){
+								if(user.getAccessStr().equals("Super Admin") || user.getAccessStr().equals("Admin")){
 									sb.append("Normal");
 								}
 								else{
