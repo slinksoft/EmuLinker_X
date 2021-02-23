@@ -233,15 +233,15 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 						user1.setLastMsgID(user.getID());
 						user.setLastMsgID(user1.getID());
 						
-						user1.getServer().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user1);
-						user.getServer().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);
+						user1.getServer().announce("(EXTERNAL MSG) TO: <" + user.getName() + "> (" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user1);
+						user.getServer().announce("(EXTERNAL MSG) <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);
 						
 						if(user1.getGame() != null){
-							user1.getGame().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
+							user1.getGame().announce("(EXTERNAL MSG) TO: <" + user.getName() + "> (" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
 						}	
 		
 						if(user.getGame() != null){
-							user.getGame().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
+							user.getGame().announce("(EXTERNAL MSG) <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
 						}
 					}
 					catch (NoSuchElementException e)
@@ -301,13 +301,13 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 								}
 														
 								user1.getServer().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user1);
-								user.getServer().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);						
+								user.getServer().announce("(EXTERNAL MSG) <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);						
 								if(user1.getGame() != null){
-									user1.getGame().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
+									user1.getGame().announce("(EXTERNAL MSG) TO: <" + user.getName() + "> (" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
 								}	
 		
 								if(user.getGame() != null){
-									user.getGame().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
+									user.getGame().announce("(EXTERNAL MSG) <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
 								}
 							}
 							catch(NoSuchElementException e1){

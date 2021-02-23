@@ -311,22 +311,12 @@ public final class KailleraGameImpl implements KailleraGame
 		}
 		
 		message = message.trim();
-		if (message.length() == 0 || message.startsWith(" ") || message.startsWith("­"))
+		// Essential for spam protection
+		if (message.length() == 0 || message.startsWith(" ") || message.contains("\n"))
 			return;
 		
 		if (user.getAccess() == AccessManager.ACCESS_NORMAL)
 		{
-			char[] chars = message.toCharArray();
-			for (int i = 0; i < chars.length; i++)
-			{
-				if (chars[i] < 32)
-				{
-					log.warn(user + " gamechat denied: Illegal characters in message");
-					addEvent(new GameInfoEvent(this, EmuLang.getString("KailleraGameImpl.GameChatDeniedIllegalCharacters"), user));
-					throw new GameChatException(EmuLang.getString("KailleraGameImpl.GameChatDeniedIllegalCharacters"));
-				}
-			}
-
 			if (server.getMaxGameChatLength() > 0 && message.length() > server.getMaxGameChatLength())
 			{
 				log.warn(user + " gamechat denied: Message Length > " + server.getMaxGameChatLength());

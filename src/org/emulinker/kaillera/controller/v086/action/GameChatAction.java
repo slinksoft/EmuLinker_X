@@ -243,13 +243,15 @@ public class GameChatAction implements V086Action, V086GameEventHandler
 						user1.setLastMsgID(user.getID());
 						user.setLastMsgID(user1.getID());
 						
-						user1.getServer().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user1);
-						user.getServer().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);
-						if(user1.getGame() != null){
+						if(user1.getGame() != null && user1.getGame() == user.getGame()){
 							user1.getGame().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
 						}	
+						else
+						{
+							user1.getGame().announce("Error: You need to be in the same game with this user to send in-game private messages.", user1);
+						}
 		
-						if(user.getGame() != null){
+						if(user.getGame() != null && user.getGame() == user1.getGame()){
 							user.getGame().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
 						}
 						return;
@@ -310,16 +312,19 @@ public class GameChatAction implements V086Action, V086GameEventHandler
 									}
 								}
 								
-								user1.getServer().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user1);
-								user.getServer().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, false, user);						
 								
-								if(user1.getGame() != null){
+								if(user1.getGame() != null && user1.getGame() == user.getGame()){
 									user1.getGame().announce("TO: <" + user.getName() + ">(" + user.getID() + ") <" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user1);
-								}	
+								}
+								else
+								{
+									user1.getGame().announce("Error: You need to be in the same game with this user to send in-game private messages.", user1);
+								}
 		
-								if(user.getGame() != null){
+								if(user.getGame() != null && user.getGame() == user1.getGame()){
 									user.getGame().announce("<" + clientHandler.getUser().getName() + "> (" + clientHandler.getUser().getID() + "): " + m, user);
 								}
+
 								return;
 							}
 							catch(Exception e1){
