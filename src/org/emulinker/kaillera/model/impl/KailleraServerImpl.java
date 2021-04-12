@@ -466,7 +466,7 @@ public class KailleraServerImpl implements KailleraServer, Executable
 		}
 		
 		//new SF MOD - Username filter
-		if((user.getName().equals("Server") || user.getName().toLowerCase().contains("|")) || (access == AccessManager.ACCESS_NORMAL && (user.getName().toLowerCase().contains("www.") || user.getName().toLowerCase().contains("http://") || user.getName().toLowerCase().contains("https://") || user.getName().toLowerCase().contains("\\") || user.getName().toLowerCase().contains("­"))))
+		if((user.getName().equals("Server") || user.getName().toLowerCase().contains("|")) || (access == AccessManager.ACCESS_NORMAL && (user.getName().toLowerCase().contains("www.") || user.getName().toLowerCase().contains("http://") || user.getName().toLowerCase().contains("https://") || user.getName().toLowerCase().contains("\\") || user.getName().toLowerCase().contains(" ") || user.getName().toLowerCase().contains("­"))))
 		{
 			log.info(user + " login denied: Illegal characters in UserName");
 			users.remove(userListKey);
@@ -708,7 +708,7 @@ public class KailleraServerImpl implements KailleraServer, Executable
 		}
 
 		message = message.trim();
-		if (message.length() == 0 || message.startsWith(" ") || message.startsWith("­"))
+		if (message.length() == 0 || message.startsWith(" ") || message.startsWith(" ")|| message.startsWith("-"))
 			return;
 
 		if (access == AccessManager.ACCESS_NORMAL)
