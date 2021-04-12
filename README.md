@@ -1,4 +1,4 @@
-# emulinkerx3
+# EmuLinker X
 An unofficial update to Emulinker X, merging EmulinkerSF with the Emulinker X project, with additional optimization, roles, features, security implementations and bug fixes.
 
 Credits:
