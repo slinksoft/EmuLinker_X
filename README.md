@@ -1,6 +1,5 @@
 # EmuLinker X
-An unofficial update to Emulinker X, merging EmulinkerSF with the Emulinker X project, with additional optimization, roles, features, security implementations and bug fixes.
-
+An unofficial update to Emulinker X v2.0.2 (2015) that fixes bugs, optimizes performance, implements new features, and merges with minor updates from the Emulinker SF project.
 Credits:
 
 - Slink
