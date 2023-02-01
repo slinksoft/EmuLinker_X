@@ -115,7 +115,7 @@ public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 		}
 		catch (Exception e)
 		{
-			log.error("Failed to touch EmuLinker Waiting Games: " + e.getMessage());
+			log.error("Failed to touch EmuLinker Master Server: " + e.getMessage());
 		}
 		
 		// Waiting Games
@@ -143,7 +143,7 @@ public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 			}
 			catch (Exception e)
 			{
-				log.error("Failed to touch Waiting Games Master Server: " + e.getMessage());
+				log.error("Failed to touch EmuLinker Waiting Games List: " + e.getMessage());
 			}
 		}
 		else
