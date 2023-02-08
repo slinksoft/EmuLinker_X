@@ -12,10 +12,10 @@ public final class KailleraServerReleaseInfo implements ReleaseInfo
 	private final String	productName		= "EmuLinker X";
 
 	private final int		majorVersion	= 3;
-	private final int		minorVersion	= 2;
+	private final int		minorVersion	= 4;
 	private final int		buildNumber		= 0; // not in use anymore
 
-	private final String	releaseDate		= "04-11-2021";
+	private final String	releaseDate		= "02-07-2023";
 	private final String	licenseInfo		= "Usage of this sofware is subject to the terms found in the included license";
 	private final String	website			= "https://slinksoft.github.io/emulinkerxdoc/";
 

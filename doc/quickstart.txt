@@ -71,6 +71,4 @@ All logs are written to a file named emulinker.log, which will automatically
 rotate every 10 megs.  You can change the log file name and settings by 
 editing the file conf/log4j.properties.
 
-Please see http://www.emulinker.org for information on performance tuning.
-
 Last Updated: 05/22/2006
