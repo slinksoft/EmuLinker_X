@@ -6,7 +6,6 @@ package org.emulinker.release;
  * ReleaseInfo is a top-level EmuLinker component; it's implementation class is loaded via PicoContainer upon startup.
  * 
  * @author Paul Cowan
- * @see www.emulinker.org
  */
 public interface ReleaseInfo
 {

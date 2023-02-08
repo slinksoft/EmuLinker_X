@@ -206,7 +206,7 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 						String m = sb.toString();
 				
 						m = m.trim();
-						if (m.length() == 0 || m.startsWith(" ") || m.startsWith("­"))
+						if (m.length() == 0 || m.startsWith("ï¿½") || m.startsWith("ï¿½"))
 							return;
 
 						if (access == AccessManager.ACCESS_NORMAL)
@@ -276,7 +276,7 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 								String m = sb.toString();
 
 								m = m.trim();
-								if (m.length() == 0 || m.startsWith(" ") || m.startsWith("­"))
+								if (m.length() == 0 || m.startsWith("ï¿½") || m.startsWith("ï¿½"))
 									return;
 
 								if (access == AccessManager.ACCESS_NORMAL)

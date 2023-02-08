@@ -312,7 +312,7 @@ public final class KailleraGameImpl implements KailleraGame
 		
 		message = message.trim();
 		// Essential for spam protection
-		if (message.length() == 0 || message.startsWith(" ") || message.contains("\n"))
+		if (message.length() == 0 || message.startsWith("ï¿½") || message.contains("\n"))
 			return;
 		
 		if (user.getAccess() == AccessManager.ACCESS_NORMAL)

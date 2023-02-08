@@ -2,9 +2,6 @@ EmuLinker is open-source software released under the terms found in LICENSE.txt.
 For more information on Open Source software please visit the Open Source 
 Initiative (OSI) website at http://www.opensource.org/
 
-Information on obtaining the latest binary and source distribution of this 
-software can always be obtained on the official EmuLinker website at 
-http://www.emulinker.org
 
 This product contains software released by various originations under various 
 open-source licenses.  These licenses are included here as required.

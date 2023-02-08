@@ -1,5 +1,10 @@
 package org.emulinker.kaillera.master.client;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.*;
@@ -16,7 +21,8 @@ import org.emulinker.util.EmuUtil;
 public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 {
 	private static Log				log	= LogFactory.getLog(EmuLinkerMasterUpdateTask.class);
-	private static final String		url	= "http://170.39.225.176/touch_list.php"; // the new EmuLinker alternative list
+	private static final String		url	= "https://emxalt.000webhostapp.com/register_server.php"; // the new EmuLinker alternative list
+	private static final String		wgUrl	= "https://emxalt.000webhostapp.com/register_game.php"; // the new EmuLinker alternative list
 
 	private PublicServerInformation	publicInfo;
 	private ConnectController		connectController;
@@ -39,77 +45,119 @@ public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 
 	public void touchMaster()
 	{
-		StringBuilder waitingGames = new StringBuilder();
-		for(KailleraGame game : kailleraServer.getGames())
-		{
-			if (game.getStatus() != KailleraGame.STATUS_WAITING)
-				continue;
-
-			waitingGames.append(game.getRomName());
-			waitingGames.append("|");
-			waitingGames.append(game.getOwner().getName());
-			waitingGames.append("|");
-			waitingGames.append(game.getOwner().getClientType());
-			waitingGames.append("|");
-			waitingGames.append(game.getNumPlayers());
-			waitingGames.append("/");
-			waitingGames.append(game.getMaxUsers());
-			waitingGames.append("|");
-		}
 		
-		NameValuePair[] params = new NameValuePair[10];
-		params[0] = new NameValuePair("serverName", publicInfo.getServerName());
-		params[1] = new NameValuePair("ipAddress", publicInfo.getConnectAddress());
-		params[2] = new NameValuePair("location", publicInfo.getLocation());
-		params[3] = new NameValuePair("website", publicInfo.getWebsite());
-		params[4] = new NameValuePair("port", Integer.toString(connectController.getBindPort()));
-		//params[5] = new NameValuePair("connectCount", Integer.toString(connectController.getConnectCount()));
-		params[5] = new NameValuePair("numUsers", Integer.toString(kailleraServer.getNumUsers()));
-		params[6] = new NameValuePair("maxUsers", Integer.toString(kailleraServer.getMaxUsers()));
-		params[7] = new NameValuePair("numGames", Integer.toString(kailleraServer.getNumGames()));
-		params[8] = new NameValuePair("maxGames", kailleraServer.getMaxGames() == 0 ? Integer.toString(kailleraServer.getMaxUsers()) : Integer.toString(kailleraServer.getMaxGames()));
-		params[9] = new NameValuePair("version", "EMX" + releaseInfo.getVersionString());
-		//params[11] = new NameValuePair("build", Integer.toString(releaseInfo.getBuildNumber()));
-		//params[12] = new NameValuePair("isWindows", Boolean.toString(EmuUtil.systemIsWindows()));
+		// Build Server Info Request
+		
+		StringBuilder buildServerInfo = new StringBuilder();
+		buildServerInfo.append(url);
+		buildServerInfo.append("?servername=" + publicInfo.getServerName());
+		buildServerInfo.append("&ipaddress=" + publicInfo.getConnectAddress());
+		buildServerInfo.append("&port=" + Integer.toString(connectController.getBindPort()));
+		buildServerInfo.append("&nbusers=" + Integer.toString(kailleraServer.getNumUsers()));
+		buildServerInfo.append("&maxconn=" + Integer.toString(kailleraServer.getMaxUsers()));
+		buildServerInfo.append("&nbgames=" + Integer.toString(kailleraServer.getNumGames()));
+		buildServerInfo.append("&version=" +"EMX" + releaseInfo.getVersionString());
+		buildServerInfo.append("&location=" + publicInfo.getLocation());
+		
+		
+		
+		
+		String serverInfo = buildServerInfo.toString();
 
-		HttpMethod meth = new GetMethod(url);
-		String encpar = EncodingUtil.formUrlEncode(params, System.getProperty("emulinker.charset"));
-		meth.setQueryString(encpar);
-		meth.setRequestHeader("Waiting-games", waitingGames.toString());
-		//meth.setFollowRedirects(true);
+		
+		// Replace any spaces in the string with %20 so the request can be valid when sent to the server
+		
+		if (serverInfo.contains(" "))
+			serverInfo = serverInfo.replace(" ", "%20");
+		
 
-		//Properties props = new Properties();
 
+		
+		// Touch Master Server With Server Info
 		try
 		{
+			URL mUrl = new URL(serverInfo);
+			URLConnection conn = mUrl.openConnection();
+            InputStream is = conn.getInputStream();
+            is.close();
+			
+            log.info("Touching EmuLinker Master done");
+            
+			/* No longer in use
 			int statusCode = httpClient.executeMethod(meth);
 			if (statusCode != HttpStatus.SC_OK)
 				log.error("Failed to touch EmuLinker Master: " + meth.getStatusLine());
 			else
 			{
-				//props.load(meth.getResponseBodyAsStream());
+				props.load(meth.getResponseBodyAsStream());
 				log.info("Touching EmuLinker Master done");
 			}
+			*/
 		}
 		catch (Exception e)
 		{
-			log.error("Failed to touch EmuLinker Master: " + e.getMessage());
+			log.error("Failed to touch EmuLinker Master Server: " + e.getMessage());
 		}
-		finally
+		
+		
+		// Touch Master Server With All Waiting Games
+		try 
 		{
-			if (meth != null)
-			{
-				try
-				{
-					meth.releaseConnection();
-				}
-				catch (Exception e)
-				{
-				}
-			}
-		}
+			// Build Waiting Games requests
 
-		/*String updateAvailable = props.getProperty("updateAvailable");
+			boolean atLeastOneWG = false; // flag to determine if there is at least one waiting game to touch to master server
+			
+			for (KailleraGame game : kailleraServer.getGames()) 
+			{
+				if (game.getStatus() != KailleraGame.STATUS_WAITING)
+					continue;
+
+				// the above if statement will "continue", aka break out of the current iteration of the for loop. If no waiting games are detected, this boolean will remain false
+				atLeastOneWG = true;
+				
+				StringBuilder waitingGames = new StringBuilder();
+
+				waitingGames.append(wgUrl);
+				waitingGames.append("?game=" + game.getRomName());
+				waitingGames.append("&ipaddress=" + publicInfo.getConnectAddress());
+				waitingGames.append("&port=" + Integer.toString(connectController.getBindPort()));
+				waitingGames.append("&user=" + game.getOwner().getName());
+				waitingGames.append("&emulator=" + game.getOwner().getClientType());
+				waitingGames.append("&nbusers=" + game.getNumPlayers());
+				waitingGames.append("&maxusers=" + game.getMaxUsers());
+				waitingGames.append("&servername=" + publicInfo.getServerName());
+				waitingGames.append("&location=" + publicInfo.getLocation());
+
+				String gameInfo = waitingGames.toString();
+
+				if (gameInfo.contains(" "))
+					gameInfo = gameInfo.replace(" ", "%20");
+
+				URL mUrl = new URL(gameInfo);
+				URLConnection conn = mUrl.openConnection();
+				InputStream is = conn.getInputStream();
+				is.close();
+
+				waitingGames = null; // set to null for the GC to dispose of it from memory
+				gameInfo = null; // set to null for the GC to dispose of it from memory
+			}
+			
+			/* If at least one waiting game is detected, the program will attempt to send a request to the master server. If none is detected, 
+			log to the log file that we are not sending data to the Master Server */
+			if (atLeastOneWG)
+				log.info("Touching EmuLinker Waiting Games done");
+			else if (!atLeastOneWG)
+				log.info("No waiting games detected. Not sending data to Master Server");
+
+		} 
+		catch (Exception e) 
+		{
+			log.error("Failed to touch EmuLinker Waiting Games List: " + e.getMessage());
+		}
+		
+		/*
+		Properties props = new Properties();
+		String updateAvailable = props.getProperty("updateAvailable");
 		if (updateAvailable != null && updateAvailable.equalsIgnoreCase("true"))
 		{
 			String latestVersion = props.getProperty("latest");
@@ -124,6 +172,7 @@ public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 				sb.append(")");
 			}
 			log.warn(sb.toString());
-		}*/
+		}
+		*/
 	}
 }
