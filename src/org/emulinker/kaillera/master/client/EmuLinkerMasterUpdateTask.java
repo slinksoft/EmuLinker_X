@@ -21,8 +21,8 @@ import org.emulinker.util.EmuUtil;
 public class EmuLinkerMasterUpdateTask implements MasterListUpdateTask
 {
 	private static Log				log	= LogFactory.getLog(EmuLinkerMasterUpdateTask.class);
-	private static final String		url	= "https://emxalt.000webhostapp.com/register_server.php"; // the new EmuLinker alternative list
-	private static final String		wgUrl	= "https://emxalt.000webhostapp.com/register_game.php"; // the new EmuLinker alternative list
+	private static final String		url	= "https://EmxKaillera.net/register_server.php"; // the new EmuLinker alternative list
+	private static final String		wgUrl	= "https://EmxKaillera.net/register_game.php"; // the new EmuLinker alternative list
 
 	private PublicServerInformation	publicInfo;
 	private ConnectController		connectController;
