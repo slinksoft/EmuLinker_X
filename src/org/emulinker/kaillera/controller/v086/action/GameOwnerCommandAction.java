@@ -148,6 +148,7 @@ public class GameOwnerCommandAction implements V086Action
 			else 
 			{		
 				log.warn("GameOwner Command Denied: Not game owner: " + game + ": " + user + ": " + chat); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				game.announce("GameOwner Command Error: You are not an owner!", user);
 				return;
 			}
 		}
@@ -238,28 +239,35 @@ public class GameOwnerCommandAction implements V086Action
 		//game.setIndividualGameAnnounce(admin.getPlayerNumber());
 		//game.announce(EmuLang.getString("GameOwnerCommandAction.AvailableCommands")); //$NON-NLS-1$
 		//try { Thread.sleep(20); } catch(Exception e) {}
-		game.announce(EmuLang.getString("GameOwnerCommandAction.SetAutofireDetection"), admin); //$NON-NLS-1$
+		
+		game.announce(EmuLang.getString("Gameroom Owner Commands"), admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		game.announce(EmuLang.getString("-----------------------"), admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		
+		game.announce(EmuLang.getString("/detectautofire to set AutoFire detection"), admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		game.announce("/kick <Player#> or /kickall to kick a player(s).", admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		game.announce("/lagstat To check who has the most lag spikes or /lagreset to reset lagstat!", admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}	
+		game.announce("/maxping <#> to set maximum ping for room", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		game.announce("/maxusers <#> to set capacity of room", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		game.announce("/maxping <#> to set maximum ping for room", admin); //$NON-NLS-1$
-		try { Thread.sleep(20); } catch(Exception e) {}
-		game.announce("/start or /startn <#> start game when n players are joined.", admin); //$NON-NLS-1$
-		try { Thread.sleep(20); } catch(Exception e) {}
 		game.announce("/mute /unmute  <UserID> or /muteall or /unmuteall to mute player(s).", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		game.announce("/swap <order> eg. 123..n {n = total # of players; Each slot = new player#}", admin); //$NON-NLS-1$
-		try { Thread.sleep(20); } catch(Exception e) {}	
-		game.announce("/kick <Player#> or /kickall to kick a player(s).", admin); //$NON-NLS-1$
-		try { Thread.sleep(20); } catch(Exception e) {}	
-		game.announce("/setemu To restrict the gameroom to this emulator!", admin); //$NON-NLS-1$
+		game.announce("/samedelay {true | false} to play at the same delay as player with highest ping. Default is false.", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}	
 		game.announce("/setconn To restrict the gameroom to this connection type!", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {} 
-		game.announce("/lagstat To check who has the most lag spikes or /lagreset to reset lagstat!", admin); //$NON-NLS-1$
+		game.announce("/setemu To restrict the gameroom to this emulator!", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}	
-		game.announce("/samedelay {true | false} to play at the same delay as player with highest ping. Default is false.", admin); //$NON-NLS-1$
+		game.announce("/start or /startn <#> start game when n players are joined.", admin); //$NON-NLS-1$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		game.announce("/swap <order> eg. 123..n {n = total # of players; Each slot = new player#}", admin); //$NON-NLS-1$
 		try { Thread.sleep(20); } catch(Exception e) {}	
+		
 	}
 	
 	private void autoFireHelp(KailleraGameImpl game, KailleraUserImpl admin)

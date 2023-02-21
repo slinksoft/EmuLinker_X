@@ -448,31 +448,41 @@ public class ChatAction implements V086Action, V086ServerEventHandler
 			            }
 			        }
 				else if(((Chat) message).getMessage().equals("/help")){	
-					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/me <message> to make personal message eg. /me is bored ...Slink is bored.")); } catch(Exception e) {}
+					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/alivecheck check to see if the server is still responsive with your client")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
+					
+					if(clientHandler.getUser().getAccess() < AccessManager.ACCESS_ADMIN){
+						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
+						try { Thread.sleep(20); } catch(Exception e) {}
+					}
+					
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/ignore <UserID> or /unignore <UserID> or /ignoreall or /unignoreall to ignore users.")); } catch(Exception e) {}
+					try { Thread.sleep(20); } catch(Exception e) {}
+					
+					if(clientHandler.getUser().getAccess() == AccessManager.ACCESS_MODERATOR) {
+						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/kick <UserID> to kick a user.")); } catch(Exception e) {}
+						try { Thread.sleep(20); } catch(Exception e) {}	
+					}
+					
+					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/me <message> to make personal message eg. /me is bored ...Slink is bored.")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/msg <UserID> <msg> to PM somebody. /msgoff or /msgon to turn pm off | on.")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
 					try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/myip to get your IP Address.")); } catch(Exception e) {}
+					try { Thread.sleep(20); } catch(Exception e) {}		
 					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/rules for the server's rule list.")); } catch(Exception e) {}
 					try { Thread.sleep(20); } catch(Exception e) {}
-					try { clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/alivecheck check to see if the server is still responsive with your client")); } catch(Exception e) {}
-					try { Thread.sleep(20); } catch(Exception e) {}
-					try { Thread.sleep(20); } catch(Exception e) {}		
+					
 					if(clientHandler.getUser().getAccess() == AccessManager.ACCESS_MODERATOR){
 						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/silence <UserID> <min> to silence a user. 15min max.")); } catch(Exception e) {}
 						try { Thread.sleep(20); } catch(Exception e) {}
-						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/kick <UserID> to kick a user.")); } catch(Exception e) {}
-						try { Thread.sleep(20); } catch(Exception e) {}	
 					}
+					
 					if(clientHandler.getUser().getAccess() < AccessManager.ACCESS_ADMIN){
 						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/version to get server version.")); } catch(Exception e) {}
-						try { Thread.sleep(20); } catch(Exception e) {}	
-						try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
 						try { Thread.sleep(20); } catch(Exception e) {}
-						return;
 					}
+					return;
 				}
 				else if(((Chat) message).getMessage().startsWith("/finduser") && clientHandler.getUser().getAccess() < AccessManager.ACCESS_ADMIN){
 					int space = ((Chat) message).getMessage().indexOf(' ');

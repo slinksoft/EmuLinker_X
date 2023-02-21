@@ -36,6 +36,12 @@ public abstract class V086Message extends ByteBufferMessage
 		//return (getBodyLength() + 5);
 	}
 
+	// Gets the number of bytes to represent the string in the charset defined in emulinker.cfg
+	protected static int getNumBytes(String s)
+	{
+		return s.getBytes(charset).length;
+	}
+	
 	public abstract int getBodyLength();
 
 	protected String getInfoString()

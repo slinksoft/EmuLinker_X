@@ -12,6 +12,7 @@ import org.emulinker.kaillera.model.event.*;
 import org.emulinker.kaillera.model.exception.ActionException;
 import org.emulinker.kaillera.model.exception.GameChatException;
 import org.emulinker.kaillera.model.impl.KailleraUserImpl;
+import org.emulinker.util.EmuLang;
 
 public class GameChatAction implements V086Action, V086GameEventHandler
 {
@@ -202,6 +203,11 @@ public class GameChatAction implements V086Action, V086GameEventHandler
 							user1.getGame().announce("User not found!", user1);
 							return;
 						}
+						
+						if(user.getGame() != user1.getGame()) {
+							user1.getGame().announce("User not in this game!", user1);
+							return;
+						}
 		
 						if(user == clientHandler.getUser()){
 							user1.getGame().announce("You can't private message yourself!", user1);
@@ -272,6 +278,11 @@ public class GameChatAction implements V086Action, V086GameEventHandler
 								
 								if (user == null){
 									user1.getGame().announce("User not found!", user1);
+									return;
+								}
+								
+								if(user.getGame() != user1.getGame()) {
+									user1.getGame().announce("User not in this game!", user1);
 									return;
 								}
 		
@@ -460,13 +471,17 @@ public class GameChatAction implements V086Action, V086GameEventHandler
 				}
 				else if(((GameChat) message).getMessage().equals("/help")){	
 					KailleraUserImpl user = (KailleraUserImpl) clientHandler.getUser();
+					
+					user.getGame().announce(EmuLang.getString("Gameroom Guests Commands"), user); //$NON-NLS-1$
+					try { Thread.sleep(20); } catch(Exception e) {}
+					user.getGame().announce(EmuLang.getString("-----------------------"), user); //$NON-NLS-1$
+					try { Thread.sleep(20); } catch(Exception e) {}
+					
+					user.getGame().announce("/ignore <UserID> or /unignore <UserID> or /ignoreall or /unignoreall to ignore users.", user);
+					try { Thread.sleep(20); } catch(Exception e) {}
 					user.getGame().announce("/me <message> to make personal message eg. /me is bored ...Slink is bored.", user);
 					try { Thread.sleep(20); } catch(Exception e) {}			
 					user.getGame().announce("/msg <UserID> <msg> to PM somebody. /msgoff or /msgon to turn pm off | on.", user);
-					try { Thread.sleep(20); } catch(Exception e) {}
-					user.getGame().announce("/ignore <UserID> or /unignore <UserID> or /ignoreall or /unignoreall to ignore users.", user);
-					try { Thread.sleep(20); } catch(Exception e) {}
-					user.getGame().announce("/p2pon or /p2poff this option ignores all server activity during gameplay.", user);
 					try { Thread.sleep(20); } catch(Exception e) {}
 					return;
 				}

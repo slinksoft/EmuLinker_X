@@ -311,10 +311,13 @@ public final class KailleraGameImpl implements KailleraGame
 		}
 		
 		message = message.trim();
+		
 		// Essential for spam protection
 		if (message.length() == 0 || message.startsWith("�") || message.contains("\n"))
 			return;
 		
+		// Commented out for now ; Jgunishka removed this in the latest version of SF in order to improve MAME netplay
+		/*
 		if (user.getAccess() == AccessManager.ACCESS_NORMAL)
 		{
 			if (server.getMaxGameChatLength() > 0 && message.length() > server.getMaxGameChatLength())
@@ -324,6 +327,7 @@ public final class KailleraGameImpl implements KailleraGame
 				throw new GameChatException(EmuLang.getString("KailleraGameImpl.GameChatDeniedMessageTooLong"));
 			}
 		}
+		*/
 
 		log.info(user + ", " + this + " gamechat: " + message); //$NON-NLS-1$ //$NON-NLS-2$
 		addEvent(new GameChatEvent(this, user, message));

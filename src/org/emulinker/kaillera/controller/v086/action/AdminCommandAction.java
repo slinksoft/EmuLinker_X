@@ -265,55 +265,76 @@ public class AdminCommandAction implements V086Action
 	{
 		if(admin.getAccess() == AccessManager.ACCESS_MODERATOR)
 			return;
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpVersion"))); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "Admin Commands")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpKick"))); //$NON-NLS-1$ //$NON-NLS-2$
-		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpSilence"))); //$NON-NLS-1$ //$NON-NLS-2$
-		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpBan"))); //$NON-NLS-1$ //$NON-NLS-2$
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "--------------")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		
-		if(admin.getAccess() == AccessManager.ACCESS_ADMIN){
-			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpClear"))); //$NON-NLS-1$ //$NON-NLS-2$
-			try { Thread.sleep(20); } catch(Exception e) {}
-		}
-		
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpCloseGame"))); //$NON-NLS-1$ //$NON-NLS-2$
-		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpAnnounce"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpAnnounceAll"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpAnnounceGame"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpBan"))); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/clear <IP Address> to remove any temp ban, silence, elevated, moderator or admin.")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpCloseGame"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/findgame <Name> to get game info. or /findgame * to get all game info.")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaon to start the trivia bot- /triviapause to pause the bot- /triviaresume to resume the bot after pause- /triviasave to save the bot's scores- /triviatime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
+		try {clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/finduser <Nick> to get a user's info. or /finduser * for all users info. eg. /finduser sli ...will return Slink info.")); } catch(Exception e) {}
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaoff to stop the bot- /triviascores to show top 3 scores- /triviawin to show a winner- /triviaupdate <IP Address> <New IP Address> to update ip address")); //$NON-NLS-1$ //$NON-NLS-2$
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpKick"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleon to start the unscramble bot- /unscramblepause to pause the bot- /unscrambleresume to resume the bot after pause- /unscramblesave to save the bot's scores- /unscrambletime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
-		try { Thread.sleep(20); } catch(Exception e) {}
-		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleoff to stop the bot- /unscramblescores to show top 3 scores- /unscramblewin to show a winner")); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		if(admin.getAccess() >= AccessManager.ACCESS_SUPERADMIN){
+			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/publicrules to display rules to everyone in main chat and game chat")); //$NON-NLS-1$ //$NON-NLS-2$
+			try { Thread.sleep(20); } catch(Exception e) {}
+		}
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpSilence"))); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/stealthon /stealthoff to join a room invisibly.")); //$NON-NLS-1$ //$NON-NLS-2$
 		try { Thread.sleep(20); } catch(Exception e) {}
 		
 		if(admin.getAccess() >= AccessManager.ACCESS_SUPERADMIN){
+			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/tempadmin to grant a user temporary admin access")); //$NON-NLS-1$ //$NON-NLS-2$
+			try { Thread.sleep(20); } catch(Exception e) {}
 			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/tempelevated <UserID> <min> to give a user temporary elevated access.")); //$NON-NLS-1$ //$NON-NLS-2$
 			try { Thread.sleep(20); } catch(Exception e) {}
 			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/tempmod <UserID> <min> to give a user temporary moderator access.")); //$NON-NLS-1$ //$NON-NLS-2$
 			try { Thread.sleep(20); } catch(Exception e) {}
-			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpTempAdmin"))); //$NON-NLS-1$ //$NON-NLS-2$
-			try { Thread.sleep(20); } catch(Exception e) {}
-			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/clear <IP Address> to remove any temp ban, silence, elevated, moderator or admin.")); //$NON-NLS-1$ //$NON-NLS-2$
-			try { Thread.sleep(20); } catch(Exception e) {}
-			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/publicrules to display rules to everyone in main chat and game chat")); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaon to start the trivia bot- /triviapause to pause the bot- /triviaresume to resume the bot after pause- /triviasave to save the bot's scores- /triviatime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/triviaoff to stop the bot- /triviascores to show top 3 scores- /triviawin to show a winner- /triviaupdate <IP Address> <New IP Address> to update ip address")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleon to start the unscramble bot- /unscramblepause to pause the bot- /unscrambleresume to resume the bot after pause- /unscramblesave to save the bot's scores- /unscrambletime <#> to change the question delay")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "/unscrambleoff to stop the bot- /unscramblescores to show top 3 scores- /unscramblewin to show a winner")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpVersion"))); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "Regular User Commands")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", "---------------------")); //$NON-NLS-1$ //$NON-NLS-2$
+		try { Thread.sleep(20); } catch(Exception e) {}
+		
+		/*
+		if(admin.getAccess() == AccessManager.ACCESS_ADMIN){
+			clientHandler.send(new InformationMessage(clientHandler.getNextMessageNumber(), "server", EmuLang.getString("AdminCommandAction.HelpClear"))); //$NON-NLS-1$ //$NON-NLS-2$
 			try { Thread.sleep(20); } catch(Exception e) {}
 		}
+		*/
+
+
 	}
 	
 
